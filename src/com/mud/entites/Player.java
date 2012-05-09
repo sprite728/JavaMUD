@@ -1,6 +1,22 @@
 package com.mud.entites;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class Player extends Entity{
+	
+	public String name;
+	public int level;
+	public int health;
+	public int energy;
+	public Map<String, Integer> stats = new HashMap<String, Integer>();
+	
+	Player(){
+		stats.put("Strength", 0);
+		stats.put("Intelligence", 0);
+		stats.put("Agility", 0);
+		stats.put("Endurance", 0);		
+	}
 
 	@Override
 	public void attack() {
