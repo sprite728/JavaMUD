@@ -3,6 +3,7 @@ package com.mud.server;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.text.SimpleDateFormat;
@@ -16,7 +17,7 @@ public class Server {
 
 	private String host;
 	private int port;
-	private static int defaultPort = 2000;
+	private static int defaultPort = 1555;
 	private static int uniqueID;
 	private boolean running;
 	private SimpleDateFormat sdf;
@@ -49,35 +50,40 @@ public class Server {
 
 	public void start() {
 		running = true;
+		ServerSocket serverSocket = null;
 		try {
-			ServerSocket serverSocket = new ServerSocket();
-		} catch (IOException e) {
-			// TODO Catch exception opening server socket
-			e.printStackTrace();
-		}
+			System.out.println("Starting server...");
+			serverSocket = new ServerSocket();
+			serverSocket.bind(new InetSocketAddress("localhost", defaultPort));
 
-		while (running) {
-			display("Waiting for incoming connections...");
-			try {
-				Socket socket = serverSocket.accept();
+			while (running) {
+				display("Waiting for incoming connections...");
+
+				Socket socket = null;
+				try{
+					socket = serverSocket.accept();
+				}catch(IOException e){
+					e.printStackTrace();
+				}
+
+				if (!running) {
+					break;
+				}
+
 				ClientThread ct = new ClientThread(socket);
 				clientList.add(ct);
 				ct.start();
-			} catch (IOException e) {
-				// TODO catch exception accepting new socket connection
-				e.printStackTrace();
 			}
-		}
 
-		try {
 			serverSocket.close();
-			Iterator iterator = clientList.iterator();
+			Iterator<ClientThread> iterator = clientList.iterator();
 			while (iterator.hasNext()) {
 				ClientThread t = (ClientThread) iterator.next();
+				t.close();
 				// TODO gracefully close client threads
 			}
 		} catch (IOException e) {
-			// TODO catch exception closing server socket
+			System.out.println("Exception starting server" + e);
 			e.printStackTrace();
 		}
 	}
