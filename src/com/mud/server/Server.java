@@ -11,6 +11,15 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 
+/**
+ * @author Jared DiCioccio
+ * <br><br>
+ * The Server opens a socket connection, accepts connections from clients, and receives messages.
+ * The messages it receives get parsed by the ServerController, which interprets the command, acts on it, and sends messages back to the client.
+ * <br><br>
+ * @param p : the port to bind to
+ * @param sg: the server GUI reference, if the server's started from the GUI
+ */
 public class Server {
 
 	private ServerSocket serverSocket;
@@ -54,15 +63,15 @@ public class Server {
 		try {
 			System.out.println("Starting server...");
 			serverSocket = new ServerSocket();
-			serverSocket.bind(new InetSocketAddress("localhost", defaultPort));
+			serverSocket.bind(new InetSocketAddress("localhost", port));
 
 			while (running) {
 				display("Waiting for incoming connections...");
 
 				Socket socket = null;
-				try{
+				try {
 					socket = serverSocket.accept();
-				}catch(IOException e){
+				} catch (IOException e) {
 					e.printStackTrace();
 				}
 
@@ -109,10 +118,13 @@ public class Server {
 		private int id;
 		private String userName;
 		String date;
+		ServerController sc;
 
 		ClientThread(Socket socket) {
 			this.socket = socket;
 			date = sdf.format(new Date());
+			sc = new ServerController();
+			
 			try {
 				oInput = new ObjectInputStream(socket.getInputStream());
 				oOutput = new ObjectOutputStream(socket.getOutputStream());
@@ -139,7 +151,6 @@ public class Server {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-
 			}
 		}
 
