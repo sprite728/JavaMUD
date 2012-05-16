@@ -143,6 +143,7 @@ public class Server {
 			while (running) {
 				try {
 					String message = (String) oInput.readObject();
+					sc.parse(message);
 				} catch (IOException e) {
 					// TODO catch exception getting object input in client
 					// thread
