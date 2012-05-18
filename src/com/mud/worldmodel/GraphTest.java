@@ -10,6 +10,8 @@ import java.util.Set;
 import org.jgrapht.graph.ClassBasedEdgeFactory;
 import org.jgrapht.graph.DirectedMultigraph;
 
+import com.mud.entites.Player;
+
 public class GraphTest {
 
 	
@@ -26,7 +28,8 @@ public class GraphTest {
 		Room r2 = new Room(2, "Room2", "The Second Room!");
 		Room r3 = new Room(3, "Room3", "The Third Room!");
 		Room r4 = new Room(4, "Room4", "The Fourth Room!");
-
+		
+		
 		
 
 		graph.addVertex(r1);
