@@ -128,8 +128,6 @@ public class Server {
 			try {
 				oInput = new ObjectInputStream(socket.getInputStream());
 				oOutput = new ObjectOutputStream(socket.getOutputStream());
-				// when the client connects, the first thing sent will be the
-				// username, so we grab that now
 			} catch (IOException e) {
 				System.out
 						.println("Could not create Input/Output stream: " + e);
