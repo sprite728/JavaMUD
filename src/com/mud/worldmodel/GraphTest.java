@@ -12,6 +12,10 @@ import org.jgrapht.graph.DirectedMultigraph;
 
 public class GraphTest {
 
+	
+	private static DirectedMultigraph<Room, DirectionEdge> graph = new DirectedMultigraph<Room, DirectionEdge>(
+			new ClassBasedEdgeFactory<Room, DirectionEdge>(
+					DirectionEdge.class));
 	/**
 	 * @param args
 	 *            the command line arguments are ignored
@@ -23,9 +27,7 @@ public class GraphTest {
 		Room r3 = new Room(3, "Room3", "The Third Room!");
 		Room r4 = new Room(4, "Room4", "The Fourth Room!");
 
-		DirectedMultigraph<Room, DirectionEdge> graph = new DirectedMultigraph<Room, DirectionEdge>(
-				new ClassBasedEdgeFactory<Room, DirectionEdge>(
-						DirectionEdge.class));
+		
 
 		graph.addVertex(r1);
 		graph.addVertex(r2);
@@ -41,38 +43,36 @@ public class GraphTest {
 		graph.addEdge(r4, r1, new DirectionEdge("East"));
 
 		
-				
-		
+	
 		
 		
 		BufferedReader reader = new BufferedReader(new InputStreamReader(
 				System.in));
 		String input = null;
 		
-		Room currentRoom = r2;
+		Room currentRoom = r1;
 		while (true) {
 			System.out.println(currentRoom);
-			Set<DirectionEdge> exits = graph.outgoingEdgesOf(currentRoom);
-			Iterator<DirectionEdge> iterator = exits.iterator();
-			HashMap<String, Room> hm = new HashMap<String,Room>();
+			HashMap<String, Room> exits = getExits(currentRoom);
 			
-			StringBuilder sb = new StringBuilder();		
-			sb.append("Exits: " );
-			while(iterator.hasNext()){
-				DirectionEdge de = iterator.next();
-				sb.append(de.getDirection() + "   ");
-				hm.put(de.getDirection(), (Room) de.getTarget());
+			System.out.print("Exits:  ");
+			for(String direction: exits.keySet()){
+				System.out.print(direction + "   ");				
 			}
-			System.out.println(sb);
+			System.out.println("");
 			
 			try {
-				input = reader.readLine();
+				input = reader.readLine();					
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			if (hm.containsKey(input)) {				
-				currentRoom = hm.get(input);
+			if (input.equalsIgnoreCase("Quit")){
+				System.out.println("GOODBYE!");
+				break;
+			}			
+			if (exits.containsKey(input)) {				
+				currentRoom = exits.get(input);
 				continue;
 			} else {
 				System.out.println("There is no exit in that direction");
@@ -80,4 +80,19 @@ public class GraphTest {
 		}
 
 	}
+	
+	private static HashMap getExits(Room r){
+		
+		Set<DirectionEdge> exits = graph.outgoingEdgesOf(r);
+		Iterator<DirectionEdge> iterator = exits.iterator();
+		HashMap<String, Room> exitsMap = new HashMap<String,Room>();
+		
+		while(iterator.hasNext()){
+			DirectionEdge de = iterator.next();			
+			exitsMap.put(de.getDirection(), (Room) de.getTarget());
+		}
+		
+		return exitsMap;
+	}
+
 }
