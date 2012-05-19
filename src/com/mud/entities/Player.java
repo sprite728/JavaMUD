@@ -41,6 +41,39 @@ public class Player extends Entity {
 	}
 
 	/**
+	 * 
+	 * @param armor
+	 *            the armor to be removed
+	 * @return false if the player is not wearing anything in that slot
+	 * @return true if the removed item was removed and placed in player's
+	 *         inventory
+	 */
+	public boolean unEquipArmor(Armor armor) {
+		EquipmentSlot slot = armor.slot;
+		Armor removedItem = (Armor) this.equipment.remove(slot);
+		if (removedItem == null) {
+			return false;
+		}
+		return inventory.add(removedItem);
+	}
+	/**
+	 * 
+	 * @param weapon
+	 *            the weapon to be removed
+	 * @return false if the player is not wearing anything in that slot
+	 * @return true if the removed item was removed and placed in player's
+	 *         inventory
+	 */
+	public boolean unEquipWeapon(Weapon weapon) {
+		EquipmentSlot slot = weapon.slot;
+		Armor removedItem = (Armor) this.equipment.remove(slot);
+		if (removedItem == null) {
+			return false;
+		}
+		return inventory.add(removedItem);
+	}
+
+	/**
 	 * @param weapon
 	 *            the weapon to equip
 	 * @return false if player's level does not meet min level criteria
@@ -54,9 +87,9 @@ public class Player extends Entity {
 		this.equipment.remove(slot);
 		this.equipment.put(slot, weapon);
 		refreshStats();
-		return true;
+		return true;		
 	}
-
+	
 	/**
 	 * @param stat
 	 *            which stat to modify (Strength, Intelligence, Agility,
