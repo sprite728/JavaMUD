@@ -44,9 +44,9 @@ public class DirectionEdge extends DefaultEdge {
 		return super.getTarget();
 	}
 	
-//	@Override
-//	public String toString(){
-//		return this.direction + " lies " + super.getTarget();
-//	}
+	@Override
+	public String toString(){
+		return this.direction + " lies " + super.getTarget();
+	}
 
 }

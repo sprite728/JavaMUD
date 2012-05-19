@@ -74,7 +74,7 @@ public class GraphTest {
 
 	}
 
-	private static HashMap getExits(Room r) {
+	private static HashMap<String, Room> getExits(Room r) {
 
 		Set<DirectionEdge> exits = graph.outgoingEdgesOf(r);
 		Iterator<DirectionEdge> iterator = exits.iterator();

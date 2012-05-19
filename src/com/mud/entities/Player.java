@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.mud.enums.EquipmentSlots;
-import com.mud.items.Armor;
 import com.mud.items.Item;
 import com.mud.worldmodel.Room;
 
@@ -80,7 +79,11 @@ public class Player extends Entity {
 		// TODO Auto-generated method stub
 
 	}
-
+	
+	/**
+	 * 
+	 * @param item the item to give. Removes item from player's inventory. Recipient Player object will call its own take() method.
+	 */
 	public void give(Item item) {
 		for (int i = 0; i < inventory.size(); i++) {
 			if (inventory.get(i) == item) {

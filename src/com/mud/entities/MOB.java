@@ -40,17 +40,7 @@ public class MOB extends Entity {
 
 	}
 
-	@Override
-	public void give(Item item) {
-		// TODO Auto-generated method stub
 
-	}
-
-	@Override
-	public void take(Item item) {
-		// TODO Auto-generated method stub
-
-	}
 
 	@Override
 	public void emote(String action) {

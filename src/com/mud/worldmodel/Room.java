@@ -2,9 +2,9 @@ package com.mud.worldmodel;
 
 import java.util.ArrayList;
 
-import com.mud.entites.Entity;
-import com.mud.entites.Item;
-import com.mud.entites.Player;
+import com.mud.entities.Entity;
+import com.mud.entities.Player;
+import com.mud.items.Item;
 
 public class Room {
 
