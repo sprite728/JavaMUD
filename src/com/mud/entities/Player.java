@@ -1,11 +1,15 @@
-package com.mud.entites;
+package com.mud.entities;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
+import com.mud.enums.EquipmentSlots;
+import com.mud.items.Armor;
+import com.mud.items.Item;
 import com.mud.worldmodel.Room;
+
+
 
 public class Player extends Entity {
 
@@ -14,26 +18,29 @@ public class Player extends Entity {
 	public int health;
 	public int energy;
 	public Map<String, Integer> stats = new HashMap<String, Integer>();
-	public ArrayList<Item> items;
+	public Map<EquipmentSlots, Item> equipment;
+	public ArrayList<Item> inventory;	
 	private Room currentRoom;
 
 	public Player() {
 		stats.put("Strength", 0);
 		stats.put("Intelligence", 0);
 		stats.put("Agility", 0);
-		stats.put("Endurance", 0);
+		stats.put("Endurance", 0);		
 	}
 
-
 	/**
-	 * @param stat which stat to modify (Strength, Intelligence, Agility, Endurance)
-	 * @param amount the amount to modify it by
+	 * @param stat
+	 *            which stat to modify (Strength, Intelligence, Agility,
+	 *            Endurance)
+	 * @param amount
+	 *            the amount to modify it by
 	 */
 	public void modifyStat(String stat, int amount) {
 		int temp = stats.get(stat);
 		stats.put(stat, temp + amount);
 	}
-	
+
 	@Override
 	public void attack() {
 		// TODO Auto-generated method stub
@@ -74,20 +81,18 @@ public class Player extends Entity {
 
 	}
 
-	@Override
 	public void give(Item item) {
-		for (int i = 0; i < items.size(); i++) {
-			if (items.get(i) == item) {
-				items.remove(i);
+		for (int i = 0; i < inventory.size(); i++) {
+			if (inventory.get(i) == item) {
+				inventory.remove(i);
 				break;
 			}
 		}
 
 	}
 
-	@Override
 	public void take(Item item) {
-		items.add(item);
+		inventory.add(item);
 	}
 
 	@Override

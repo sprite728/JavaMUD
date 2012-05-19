@@ -1,4 +1,4 @@
-package com.mud.entites;
+package com.mud.entities;
 
 import com.mud.worldmodel.Room;
 

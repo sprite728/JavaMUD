@@ -1,12 +1,5 @@
-package com.mud.entites;
+package com.mud.items;
 
-import com.mud.entites.Item;
-
-public class Weapon extends Item{
-
-	
-	
-	
-
+public class Weapon extends Item {
 
 }

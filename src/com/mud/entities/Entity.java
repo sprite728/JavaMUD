@@ -15,8 +15,6 @@ public abstract class Entity {
 	public abstract void die();
 	public abstract void spawn();
 	public abstract void despawn();
-	public abstract void give(Item item);
-	public abstract void take(Item item);
 	public abstract void emote(String action);
 	public abstract void move(Room r);
 }
