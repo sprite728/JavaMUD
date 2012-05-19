@@ -1,12 +1,14 @@
 package com.mud.entities;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import com.mud.worldmodel.Room;
 
 public abstract class Entity {
 	
+	public String name;
+	public int level;
+	public int health;
+	public int energy;
+	public Room currentRoom;
 
 	
 	public abstract void attack();	
