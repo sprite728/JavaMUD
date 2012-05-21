@@ -2,7 +2,6 @@ package com.mud.entities;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
 import com.mud.enums.EquipmentSlot;
 import com.mud.items.Armor;
@@ -12,16 +11,17 @@ import com.mud.worldmodel.Room;
 
 public class Player extends Entity {
 
-	public Map<String, Integer> stats = new HashMap<String, Integer>();
-	public Map<EquipmentSlot, Item> equipment;
+	public PlayerClass playerClass;
+	public HashMap<String, Integer> stats;
+	public HashMap<EquipmentSlot, Item> equipment;
 	public ArrayList<Item> inventory;
-	public boolean isAuthenticated = false;
+	public boolean isAuthenticated;
 
 	public Player() {
-		stats.put("Strength", 0);
-		stats.put("Intelligence", 0);
-		stats.put("Agility", 0);
-		stats.put("Endurance", 0);
+		stats = new HashMap<String, Integer>();
+		equipment = new HashMap<EquipmentSlot, Item>();
+		inventory = new ArrayList<Item>();
+		isAuthenticated = false;
 	}
 
 	/**

@@ -8,9 +8,10 @@ import com.mud.items.Item;
 
 public class Room {
 
-	private int id;
-	private String name;
-	private String description;
+	public int id;
+	public  String name;
+	public String description;
+	
 	ArrayList<Entity> NPCs;
 	ArrayList<Player> players;
 	ArrayList<Item> items;
