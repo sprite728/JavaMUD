@@ -15,6 +15,7 @@ public class Player extends Entity {
 	public Map<String, Integer> stats = new HashMap<String, Integer>();
 	public Map<EquipmentSlot, Item> equipment;
 	public ArrayList<Item> inventory;
+	public boolean isAuthenticated = false;
 
 	public Player() {
 		stats.put("Strength", 0);
@@ -56,6 +57,7 @@ public class Player extends Entity {
 		}
 		return inventory.add(removedItem);
 	}
+
 	/**
 	 * 
 	 * @param weapon
@@ -87,9 +89,9 @@ public class Player extends Entity {
 		this.equipment.remove(slot);
 		this.equipment.put(slot, weapon);
 		refreshStats();
-		return true;		
+		return true;
 	}
-	
+
 	/**
 	 * @param stat
 	 *            which stat to modify (Strength, Intelligence, Agility,

@@ -1,8 +1,9 @@
 package com.mud.server;
 
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.InputStreamReader;
+import java.io.PrintStream;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -11,14 +12,20 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 
+import com.mud.entities.Player;
+
 /**
- * @author Jared DiCioccio
- * <br><br>
- * The Server opens a socket connection, accepts connections from clients, and receives messages.
- * The messages it receives get parsed by the ServerController, which interprets the command, acts on it, and sends messages back to the client.
- * <br><br>
- * @param p : the port to bind to
- * @param sg: the server GUI reference, if the server's started from the GUI
+ * @author Jared DiCioccio <br>
+ * <br>
+ *         The Server opens a socket connection, accepts connections from
+ *         clients, and receives messages. The messages it receives get parsed
+ *         by the ServerController, which interprets the command, acts on it,
+ *         and sends messages back to the client. <br>
+ * <br>
+ * @param p
+ *            : the port to bind to
+ * @param sg
+ *            : the server GUI reference, if the server's started from the GUI
  */
 public class Server {
 
@@ -113,21 +120,24 @@ public class Server {
 
 	class ClientThread extends Thread {
 		Socket socket;
-		ObjectInputStream oInput;
-		ObjectOutputStream oOutput;
+		BufferedReader input;
+		PrintStream output;
 		private int id;
 		private String userName;
 		String date;
 		ServerController sc;
+		boolean authenticated = false;
+		Player player = new Player();
 
 		ClientThread(Socket socket) {
 			this.socket = socket;
 			date = sdf.format(new Date());
 			sc = new ServerController();
-			
+
 			try {
-				oInput = new ObjectInputStream(socket.getInputStream());
-				oOutput = new ObjectOutputStream(socket.getOutputStream());
+				input = new BufferedReader(new InputStreamReader(
+						socket.getInputStream()));
+				output = new PrintStream(socket.getOutputStream());
 			} catch (IOException e) {
 				System.out
 						.println("Could not create Input/Output stream: " + e);
@@ -138,16 +148,28 @@ public class Server {
 
 		public void run() {
 			boolean running = true;
+
+			while (!player.isAuthenticated) {
+				try {
+					output.println("Username: ");
+					String u = input.readLine();
+					output.println("Password: ");
+					// TODO: Double hash this:
+					String p = input.readLine();
+					player = sc.authenticatePlayer(u, p);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+
 			while (running) {
 				try {
-					String message = (String) oInput.readObject();
+					String message = input.readLine();
 					sc.parse(message);
 				} catch (IOException e) {
 					// TODO catch exception getting object input in client
 					// thread
-					e.printStackTrace();
-				} catch (ClassNotFoundException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
