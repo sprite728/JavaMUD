@@ -133,9 +133,9 @@ public class Player extends Entity {
 	}
 
 	@Override
-	public void spawn() {
-		// TODO Auto-generated method stub
-
+	public void spawn(Room r) {
+		this.currentRoom = r;
+		r.players.add(this);
 	}
 
 	@Override

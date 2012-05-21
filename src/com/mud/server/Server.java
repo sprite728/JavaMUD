@@ -43,7 +43,6 @@ public class Server {
 	private boolean running;
 	private SimpleDateFormat sdf;
 	private ServerGUI sgui;
-	// Will hold an array of client threads - one for each client that connects
 	public HashMap<String, ClientThread> clientList;
 	public static Server server;
 	public ServerController sc;
@@ -193,6 +192,8 @@ public class Server {
 							if (this.socket.equals((entry.getValue()))) {
 								server.clientList.remove(entry.getKey());
 								server.clientList.put(u, this);
+								this.userName = u;
+								sc.playerCount++;
 							}
 						}
 
@@ -218,7 +219,15 @@ public class Server {
 		}
 
 		private void close() {
-			// TODO gracefully close client thread
+			sc.playerCount--;
+			server.clientList.remove(this.userName);
+			sc.removePlayer(this.player);
+			try {
+				this.socket.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 

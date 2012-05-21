@@ -3,6 +3,8 @@ package com.mud.worldmodel;
 import java.util.ArrayList;
 
 import com.mud.entities.Entity;
+import com.mud.entities.MOB;
+import com.mud.entities.NPC;
 import com.mud.entities.Player;
 import com.mud.items.Item;
 
@@ -12,14 +14,27 @@ public class Room {
 	public String name;
 	public String description;
 
-	ArrayList<Entity> NPCs;
-	ArrayList<Player> players;
-	ArrayList<Item> items;
+	public ArrayList<NPC> NPCs;
+	public ArrayList<MOB> MOBs;
+	public ArrayList<Player> players;
+	public ArrayList<Item> items;
 
 	public Room(int id, String name, String description) {
 		this.id = id;
 		this.name = name;
 		this.description = description;
+	}
+
+	public void removePlayer(Player player) {
+		players.remove(player);
+	}
+
+	public void removeItem(Item item) {
+		items.remove(item);
+	}
+
+	public void removeEntity(Entity entity) {
+		NPCs.remove(entity);
 	}
 
 	/**

@@ -1,5 +1,6 @@
 package com.mud.server;
 
+import com.mud.datalayer.DAL;
 import com.mud.entities.Player;
 import com.mud.server.Server.ClientThread;
 import com.mud.worldmodel.Room;
@@ -13,8 +14,10 @@ import com.mud.worldmodel.World;
  * 
  */
 public class ServerController {
-
+	static int playerCount;
 	Server server;
+	DAL dal;
+	World world;
 
 	public ServerController(Server s) {
 		server = s;
@@ -32,7 +35,7 @@ public class ServerController {
 	 */
 	protected boolean initializeWorld() {
 		// TODO: This will generate the MUDs rooms list
-		World world = new World();
+		world = new World();
 		return true;
 	}
 
@@ -60,9 +63,7 @@ public class ServerController {
 	 * @returns false if we can't authenticate with the server (bad user/pass)
 	 */
 	public boolean authenticateUser(String user, String passHash) {
-		// TODO authenticate against database, generate Player() object with
-		// persisted database data and set isAuthenticated to true;
-		return true;
+		return dal.authenticateUser(user, passHash);
 	}
 
 	/**
@@ -74,6 +75,11 @@ public class ServerController {
 	public Player getAuthenticatedPlayer(String user) {
 		// TODO Auto-generated method stub
 		return new Player();
+	}
+
+	public void removePlayer(Player player) {
+		dal.savePlayer(player);
+		player.currentRoom.removePlayer(player);
 	}
 
 }

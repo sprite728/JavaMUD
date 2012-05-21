@@ -15,7 +15,7 @@ public abstract class Entity {
 	public abstract void cast();
 	public abstract void sleep();
 	public abstract void die();
-	public abstract void spawn();
+	public abstract void spawn(Room r);
 	public abstract void despawn();
 	public abstract void emote(String action);
 	public abstract void move(Room r);
