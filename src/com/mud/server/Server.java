@@ -104,7 +104,7 @@ public class Server {
 				}
 
 				// we create a new thread, and add it to the clientlist as a
-				// temporary connection.
+				// temporary client
 				// if we authenticate the user, we replace that entry with a
 				// proper entry <User,ClientThread>
 				ClientThread ct = new ClientThread(socket, sc);

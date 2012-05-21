@@ -16,6 +16,7 @@ public class Player extends Entity {
 	public HashMap<EquipmentSlot, Item> equipment;
 	public ArrayList<Item> inventory;
 	public boolean isAuthenticated;
+	public Room bindPoint;
 
 	public Player() {
 		stats = new HashMap<String, Integer>();
@@ -128,8 +129,8 @@ public class Player extends Entity {
 
 	@Override
 	public void die() {
-		// TODO Auto-generated method stub
 
+		spawn(bindPoint);
 	}
 
 	@Override
