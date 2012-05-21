@@ -1,6 +1,9 @@
 package com.mud.server;
 
 import com.mud.entities.Player;
+import com.mud.server.Server.ClientThread;
+import com.mud.worldmodel.Room;
+import com.mud.worldmodel.World;
 
 /**
  * @author Jared DiCioccio <br>
@@ -11,13 +14,41 @@ import com.mud.entities.Player;
  */
 public class ServerController {
 
-	public ServerController() {
+	Server server;
 
+	public ServerController(Server s) {
+		server = s;
 	}
 
 	public String parse(String input) {
 		String output = "";
 		return output;
+	}
+
+	/**
+	 * 
+	 * @return true if Graph of rooms is generated
+	 * @return false if something goes wrong and the world is not generated
+	 */
+	protected boolean initializeWorld() {
+		// TODO: This will generate the MUDs rooms list
+		World world = new World();
+		return true;
+	}
+
+	/**
+	 * 
+	 * @param user
+	 *            the user we're looking for
+	 * @return the room he is in, null if he is not found
+	 */
+	protected Room findPlayer(String user) {
+		for (ClientThread ct : server.clientList.values()) {
+			if (ct.player.name == user) {
+				return ct.player.currentRoom;
+			}
+		}
+		return null;
 	}
 
 	/**

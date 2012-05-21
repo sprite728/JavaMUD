@@ -45,7 +45,8 @@ public class Server {
 	private ServerGUI sgui;
 	// Will hold an array of client threads - one for each client that connects
 	public HashMap<String, ClientThread> clientList;
-	static Server server;
+	public static Server server;
+	public ServerController sc;
 
 	public Server() {
 		this(defaultPort);
@@ -60,6 +61,7 @@ public class Server {
 		port = p;
 		sdf = new SimpleDateFormat("HH:mm:ss");
 		clientList = new HashMap<String, ClientThread>();
+		sc = new ServerController(this);
 	}
 
 	/**
@@ -106,7 +108,7 @@ public class Server {
 				// temporary connection.
 				// if we authenticate the user, we replace that entry with a
 				// proper entry <User,ClientThread>
-				ClientThread ct = new ClientThread(socket);
+				ClientThread ct = new ClientThread(socket, sc);
 				clientList.put("temporary", ct);
 				ct.start();
 			}
@@ -149,14 +151,14 @@ public class Server {
 		String date;
 		ServerController sc;
 		boolean authenticated = false;
-		Player player = new Player();
+		Player player;
 
-		ClientThread(Socket socket) {
+		ClientThread(Socket socket, ServerController sc) {
 			this.socket = socket;
 			date = sdf.format(new Date());
-			sc = new ServerController();
+			this.sc = sc;
+			player = new Player();
 			player.isAuthenticated = false;
-
 			try {
 				input = new BufferedReader(new InputStreamReader(
 						socket.getInputStream()));
