@@ -9,9 +9,9 @@ import com.mud.items.Item;
 public class Room {
 
 	public int id;
-	public  String name;
+	public String name;
 	public String description;
-	
+
 	ArrayList<Entity> NPCs;
 	ArrayList<Player> players;
 	ArrayList<Item> items;
@@ -51,9 +51,10 @@ public class Room {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-    
-    public String toString(){
-        return String.valueOf(this.id) + " - " + this.name + ": " + this.description;
-    }
+
+	public String toString() {
+		return String.valueOf(this.id) + " - " + this.name + ": "
+				+ this.description;
+	}
 
 }

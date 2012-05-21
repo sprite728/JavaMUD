@@ -8,11 +8,16 @@ import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map.Entry;
+
+import org.apache.commons.collections.BidiMap;
 
 import com.mud.entities.Player;
+import com.mud.server.Server.ClientThread;
 
 /**
  * @author Jared DiCioccio <br>
@@ -39,7 +44,8 @@ public class Server {
 	private SimpleDateFormat sdf;
 	private ServerGUI sgui;
 	// Will hold an array of client threads - one for each client that connects
-	private ArrayList<ClientThread> clientList;
+	public HashMap<String, ClientThread> clientList;
+	static Server server;
 
 	public Server() {
 		this(defaultPort);
@@ -53,7 +59,7 @@ public class Server {
 		sgui = sg;
 		port = p;
 		sdf = new SimpleDateFormat("HH:mm:ss");
-		clientList = new ArrayList<ClientThread>();
+		clientList = new HashMap<String, ClientThread>();
 	}
 
 	/**
@@ -62,6 +68,16 @@ public class Server {
 	 */
 	private void display(String msg) {
 		System.out.println(msg);
+	}
+
+	public void msgAll(String msg) {
+		for (ClientThread ct : server.clientList.values()) {
+			ct.sendMessage(msg);
+		}
+	}
+
+	public void msgUser(String user, String msg) {
+		clientList.get(user).sendMessage(msg);
 	}
 
 	public void start() {
@@ -86,13 +102,18 @@ public class Server {
 					break;
 				}
 
+				// we create a new thread, and add it to the clientlist as a
+				// temporary connection.
+				// if we authenticate the user, we replace that entry with a
+				// proper entry <User,ClientThread>
 				ClientThread ct = new ClientThread(socket);
-				clientList.add(ct);
+				clientList.put("temporary", ct);
 				ct.start();
 			}
 
 			serverSocket.close();
-			Iterator<ClientThread> iterator = clientList.iterator();
+			Iterator<Entry<String, ClientThread>> iterator = clientList
+					.entrySet().iterator();
 			while (iterator.hasNext()) {
 				ClientThread t = (ClientThread) iterator.next();
 				t.close();
@@ -114,7 +135,8 @@ public class Server {
 	 */
 	public static void main(String[] args) {
 		int portNumber = defaultPort;
-		Server server = new Server(portNumber);
+
+		server = new Server(portNumber);
 		server.start();
 	}
 
@@ -133,6 +155,7 @@ public class Server {
 			this.socket = socket;
 			date = sdf.format(new Date());
 			sc = new ServerController();
+			player.isAuthenticated = false;
 
 			try {
 				input = new BufferedReader(new InputStreamReader(
@@ -146,6 +169,10 @@ public class Server {
 
 		}
 
+		public void sendMessage(String msg) {
+			output.println(msg);
+		}
+
 		public void run() {
 			boolean running = true;
 
@@ -156,7 +183,20 @@ public class Server {
 					output.println("Password: ");
 					// TODO: Double hash this:
 					String p = input.readLine();
-					player = sc.authenticatePlayer(u, p);
+					if (sc.authenticateUser(u, p)) {
+						player = sc.getAuthenticatedPlayer(u);
+						output.println("Welcome back!");
+						for (Entry<String, ClientThread> entry : server.clientList
+								.entrySet()) {
+							if (this.socket.equals((entry.getValue()))) {
+								server.clientList.remove(entry.getKey());
+								server.clientList.put(u, this);
+							}
+						}
+
+					} else {
+						output.println("Wrong user/pass");
+					}
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
