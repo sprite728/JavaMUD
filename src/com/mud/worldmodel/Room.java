@@ -72,4 +72,9 @@ public class Room {
 				+ this.description;
 	}
 
+	public void alertArrival() {
+		
+		
+	}
+
 }

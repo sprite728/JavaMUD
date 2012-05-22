@@ -29,18 +29,10 @@ public class MOB extends Entity {
 	}
 
 	@Override
-	public void spawn() {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
 	public void despawn() {
 		// TODO Auto-generated method stub
 
 	}
-
-
 
 	@Override
 	public void emote(String action) {
@@ -50,6 +42,12 @@ public class MOB extends Entity {
 
 	@Override
 	public void move(Room r) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void spawn(Room r) {
 		// TODO Auto-generated method stub
 
 	}

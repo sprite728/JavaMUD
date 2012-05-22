@@ -1,23 +1,13 @@
 package com.mud.server;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintStream;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.text.SimpleDateFormat;
-import java.util.Collection;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map.Entry;
-
-import org.apache.commons.collections.BidiMap;
-
-import com.mud.entities.Player;
-import com.mud.server.Server.ClientThread;
 
 /**
  * @author Jared DiCioccio <br>
@@ -107,7 +97,7 @@ public class Server {
 				// temporary client
 				// if we authenticate the user, we replace that entry with a
 				// proper entry <User,ClientThread>
-				ClientThread ct = new ClientThread(socket, sc);
+				ClientThread ct = new ClientThread(socket, sc, this);
 				clientList.put("temporary", ct);
 				ct.start();
 			}
@@ -140,95 +130,4 @@ public class Server {
 		server = new Server(portNumber);
 		server.start();
 	}
-
-	class ClientThread extends Thread {
-		Socket socket;
-		BufferedReader input;
-		PrintStream output;
-		private int id;
-		private String userName;
-		String date;
-		ServerController sc;
-		boolean authenticated = false;
-		Player player;
-
-		ClientThread(Socket socket, ServerController sc) {
-			this.socket = socket;
-			date = sdf.format(new Date());
-			this.sc = sc;
-			player = new Player();
-			player.isAuthenticated = false;
-			try {
-				input = new BufferedReader(new InputStreamReader(
-						socket.getInputStream()));
-				output = new PrintStream(socket.getOutputStream());
-			} catch (IOException e) {
-				System.out
-						.println("Could not create Input/Output stream: " + e);
-				e.printStackTrace();
-			}
-
-		}
-
-		public void sendMessage(String msg) {
-			output.println(msg);
-		}
-
-		public void run() {
-			boolean running = true;
-
-			while (!player.isAuthenticated) {
-				try {
-					output.println("Username: ");
-					String u = input.readLine();
-					output.println("Password: ");
-					// TODO: Double hash this:
-					String p = input.readLine();
-					if (sc.authenticateUser(u, p)) {
-						player = sc.getAuthenticatedPlayer(u);
-						output.println("Welcome back!");
-						for (Entry<String, ClientThread> entry : server.clientList
-								.entrySet()) {
-							if (this.socket.equals((entry.getValue()))) {
-								server.clientList.remove(entry.getKey());
-								server.clientList.put(u, this);
-								this.userName = u;
-								sc.playerCount++;
-							}
-						}
-
-					} else {
-						output.println("Wrong user/pass");
-					}
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-
-			while (running) {
-				try {
-					String message = input.readLine();
-					sc.parse(message);
-				} catch (IOException e) {
-					// TODO catch exception getting object input in client
-					// thread
-					e.printStackTrace();
-				}
-			}
-		}
-
-		private void close() {
-			sc.playerCount--;
-			server.clientList.remove(this.userName);
-			sc.removePlayer(this.player);
-			try {
-				this.socket.close();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-	}
-
 }

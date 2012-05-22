@@ -2,7 +2,7 @@ package com.mud.server;
 
 import com.mud.datalayer.DAL;
 import com.mud.entities.Player;
-import com.mud.server.Server.ClientThread;
+import com.mud.parser.Parser;
 import com.mud.worldmodel.Room;
 import com.mud.worldmodel.World;
 
@@ -10,22 +10,24 @@ import com.mud.worldmodel.World;
  * @author Jared DiCioccio <br>
  * <br>
  *         The ServerController parses messages received by Server and acts on
- *         them
+ *         them. It directly handles database access and controls the world
+ *         model.
  * 
  */
 public class ServerController {
-	static int playerCount;
-	Server server;
-	DAL dal;
-	World world;
+	public static int playerCount;
+	public Server server;
+	public DAL dal;
+	protected World world;
+	Parser parser = new Parser();
 
 	public ServerController(Server s) {
 		server = s;
 	}
 
 	public String parse(String input) {
-		String output = "";
-		return output;
+		parser.Parse(input);
+		return "Result";
 	}
 
 	/**

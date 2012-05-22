@@ -1,5 +1,5 @@
-package com.mud.entities;
+package com.mud.enums;
 
-public class PlayerClass {
-	
+public enum PlayerClass {
+	WARRIOR, ROGUE, WIZARD, SORCERER, CLERIC, FIGHTER
 }

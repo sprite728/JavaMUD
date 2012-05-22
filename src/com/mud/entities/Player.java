@@ -3,8 +3,8 @@ package com.mud.entities;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import com.mud.enums.EquipmentSlot;
 import com.mud.items.Armor;
+import com.mud.items.EquipmentSlot;
 import com.mud.items.Item;
 import com.mud.items.Weapon;
 import com.mud.worldmodel.Room;
@@ -17,12 +17,21 @@ public class Player extends Entity {
 	public ArrayList<Item> inventory;
 	public boolean isAuthenticated;
 	public Room bindPoint;
+	
 
 	public Player() {
 		stats = new HashMap<String, Integer>();
 		equipment = new HashMap<EquipmentSlot, Item>();
 		inventory = new ArrayList<Item>();
 		isAuthenticated = false;
+	}
+
+	public boolean inIventory(Item item) {
+		return inventory.contains(item);
+	}
+
+	public boolean isWearing(Item item) {
+		return equipment.containsValue(item);
 	}
 
 	/**
@@ -113,6 +122,7 @@ public class Player extends Entity {
 	@Override
 	public void move(Room r) {
 		this.currentRoom = r;
+		r.alertArrival();
 	}
 
 	@Override
@@ -148,10 +158,12 @@ public class Player extends Entity {
 	/**
 	 * 
 	 * @param item
-	 *            the item to give. Removes item from player's inventory.
-	 *            Recipient Player object will call its own take() method.
+	 *            the item to remove from inventory.
+	 * 
+	 *            Removes item from player's inventory. *
+	 * 
 	 */
-	public void give(Item item) {
+	public void removeItem(Item item) {
 		for (int i = 0; i < inventory.size(); i++) {
 			if (inventory.get(i) == item) {
 				inventory.remove(i);
@@ -161,7 +173,14 @@ public class Player extends Entity {
 
 	}
 
-	public void take(Item item) {
+	/**
+	 * 
+	 * @param item
+	 *            the item to add to player's inventory
+	 * 
+	 *            Adds item to player's inventory.
+	 */
+	public void addItem(Item item) {
 		inventory.add(item);
 	}
 
@@ -174,5 +193,4 @@ public class Player extends Entity {
 	private void refreshStats() {
 		// TODO Auto-generated method stub
 	}
-
 }
